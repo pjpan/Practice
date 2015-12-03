@@ -7,6 +7,7 @@ network <- read.table('./data/NewBI.txt'
                       , header = T
                       , stringsAsFactors = F
                       , encoding = "UTF8" 
+                      , fileEncoding = "UTF8"
 )
 
 Links <- network
@@ -20,7 +21,8 @@ Nodes <- read.table('./data/酒店BI社交网络图 (Nodes)_无向节点.csv'
 
 # 出发和目的地join
 networkall <- network%>%left_join(network,network, by = c("sourceName" = "targetName", "targetName" = "sourceName" ) ,copy = T)
-names(networkall)
+names(Links)
+Links[,1]%in%Links[,2]
 
 #  单向评分的节点关系；
 networksingle <- filter(networkall,is.na(weight.y) == T)
@@ -29,6 +31,8 @@ networkdouble <- mutate(filter(networkall,is.na(weight.y) == F)
                         ,sourcetgt = paste(sourceName, targetName)
                         ,tgtsource = paste(targetName, sourceName)
                        )
+
+
 write.table(networkdouble,file = './data/networkdouble.txt',row.names = F, fileEncoding = 'UTF8')
 # 查看 tgtsource 里面是否存在了 sourcetgt；
 
@@ -56,8 +60,6 @@ network$dep <- left_join(network, namedept,by = c("targetName"="targetName"))$de
 
 save(Links,colormap,Nodes,namedept,file ='./conf/utils.RData')
 
-
-Links
 
 
 
