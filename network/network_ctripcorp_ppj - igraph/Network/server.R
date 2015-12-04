@@ -5,6 +5,8 @@ library(dplyr)
 # Define server logic required to summarize and view the selected dataset
 load('./conf/utils.RData')
 
+# filter(Nodes,Label =='赵华')$PageRank   Nodes[109,11] <- 0.01124424
+
 groupnum <- length(unique(Nodes$Modularity.Class))   # 看一下社团类别
 groupcolor <- as.data.frame(cbind(color=rainbow(groupnum),group = as.integer(unique(Nodes$Modularity.Class))),stringsAsFactors = F) # 生成不同社团的随机颜色；    
 
@@ -13,7 +15,7 @@ shinyServer(function(input, output) {
   # Generate a summary of the dataset
   output$Plot <- renderPlot({
     
-    if(input$name == "all"){
+    if(gsub(" ","",input$name) == "all"){
       data <- network
       data <- data %>% 
                 arrange(desc(weight)) %>% 
@@ -21,11 +23,10 @@ shinyServer(function(input, output) {
                 head(n = input$obs)
     
     }else{
-      data <- subset(network, network$sourceName == input$name|network$targetName == input$name)  # 单项节点，非双向的；                  
+      data <- subset(network, network$sourceName == gsub(" ","",input$name)|network$targetName == gsub(" ","",input$name))  # 单项节点，非双向的；                  
       data <- data %>% arrange(desc(weight)) %>%
                            #    filter(weight >=5)%>%
                                  head(n = input$obs)
-      
     }
         
     # debug
@@ -72,7 +73,7 @@ shinyServer(function(input, output) {
 
   # Show the first "n" observations
   output$view <- renderTable({
-    if(input$name == "all"){
+    if(gsub(" ","",input$name) == "all"){
       data <- network
       data <- data %>% 
         arrange(desc(weight)) %>% 
@@ -81,17 +82,31 @@ shinyServer(function(input, output) {
         select(sourceName,targetName,weight)
       
     }else{
-      data <- subset(network, network$sourceName == input$name|network$targetName == input$name)  # 单项节点，非双向的；                  
-      data <- data %>% arrange(desc(weight)) %>%
-      #  filter(weight >=5)%>%
-        head(n = input$obs) %>%
-        select(sourceName,targetName,weight)
+      data <- subset(network, network$sourceName == gsub(" ","",input$name)|network$targetName == gsub(" ","",input$name))  # 单项节点，非双向的；                  
+      data <- data %>% arrange(desc(weight))%>%
+                        head(n = input$obs)
       
-    }
+      
+      # 调整一下位置；如果和输入的source名字不同，把source和target换位置；
+      for(i in 1:nrow(data)) 
+      {
+        if(data[i,"sourceName"]==gsub(" ","",input$name)){
+          data$target[i] <- data[i,"targetName"]
+        }else {
+          data$target[i] <- data[i,"sourceName"]
+        }
+      }
+      
+      data <- data%>%select(target,weight)
+                   
+   
+  }
     
   })
 })
 
+
+# runApp(,port=4033)
 
 
 

@@ -19,11 +19,10 @@ shinyUI(pageWithSidebar(
 #     sliderInput("obs", "Number of observations to view:", 
 #                 min=1, max=200, value=20),
     
-      numericInput("obs", "Number of observations to view:", 30),
+      numericInput("obs", "Number of observations to view:", 50),
     
-      helpText("Note: while the data view will show only the specified",
-             "number of observations, the summary will still be based",
-             "on the full dataset."),
+      helpText("Note: 1） 社会网络图中圆圈越大代表该节点在社会网络中与直接或间接连接的人关系强度越大  
+                      2）社会网络图中同一种颜色节点代表这些节点处于同一个社区。"),
     
       submitButton("Update View"),
       tabPanel("Observations",tableOutput("view")),  # 把输出结果挪到了左边，侧边栏；

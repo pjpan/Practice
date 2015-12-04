@@ -24,9 +24,8 @@ colormap <- as.data.frame(cbind(dep=unique(data$dep),color=rainbow(length(unique
 
 # 切换dept，从source变成target；
 network$dep <- left_join(network, namedept,by = c("targetName"="targetName"))$dep  #  替换部门，从source变成target;
+
 save(network,colormap,Nodes,file ='./conf/utils.RData')
-
-
 
 g <- make_ring(10)
 vertex_attr(g) <- list(name = LETTERS[1:10],
