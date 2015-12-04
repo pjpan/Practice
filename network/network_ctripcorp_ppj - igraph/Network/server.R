@@ -17,13 +17,13 @@ shinyServer(function(input, output) {
       data <- network
       data <- data %>% 
                 arrange(desc(weight)) %>% 
-                filter(weight>=5) %>%
+              #  filter(weight>=5) %>%
                 head(n = input$obs)
     
     }else{
       data <- subset(network, network$sourceName == input$name|network$targetName == input$name)  # 单项节点，非双向的；                  
       data <- data %>% arrange(desc(weight)) %>%
-                               filter(weight >=5)%>%
+                           #    filter(weight >=5)%>%
                                  head(n = input$obs)
       
     }
@@ -51,7 +51,7 @@ shinyServer(function(input, output) {
         
     try(plot(g,
         main='Ctrip Organizational network Demo',
-        vertex.size = vertex_attr(g,"PageRank")*1000,   #  节点的大小用pagerank来衡量；
+        vertex.size = 10*((vertex_attr(g,"PageRank")-min(vertex_attr(g,"PageRank")))/((max(vertex_attr(g,"PageRank")))-(min(vertex_attr(g,"PageRank"))))),   # 节点的大小用pagerank来衡量；
         vertex.shape='circle',                        #   节点的形状；
         vertex.label=V(g)$Label,
         vertex.label.dist=0,                      # puts the name labels slightly off the dots
@@ -76,14 +76,14 @@ shinyServer(function(input, output) {
       data <- network
       data <- data %>% 
         arrange(desc(weight)) %>% 
-        filter(weight>=5) %>%
+      #  filter(weight>=5) %>%
         head(n = input$obs) %>%
         select(sourceName,targetName,weight)
       
     }else{
       data <- subset(network, network$sourceName == input$name|network$targetName == input$name)  # 单项节点，非双向的；                  
       data <- data %>% arrange(desc(weight)) %>%
-        filter(weight >=5)%>%
+      #  filter(weight >=5)%>%
         head(n = input$obs) %>%
         select(sourceName,targetName,weight)
       
