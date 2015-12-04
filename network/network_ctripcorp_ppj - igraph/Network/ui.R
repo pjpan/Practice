@@ -15,8 +15,7 @@ shinyUI(pageWithSidebar(
     
       textInput("name", "Please Enter a Name:", 
                 value = c("all")),
-    
-    
+        
 #     sliderInput("obs", "Number of observations to view:", 
 #                 min=1, max=200, value=20),
     

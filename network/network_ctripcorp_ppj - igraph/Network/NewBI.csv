@@ -1,4 +1,4 @@
-"","sourceName","targetName","type","id","label","weight","dep"
+"col","sourceName","targetName","type","id","label","weight","dep"
 "1","黎建辉","HAN SHITUO","Directed",330,NA,3,"酒店研发部"
 "2","岳晓东","HAN SHITUO","Directed",603,NA,0.5,"酒店研发部"
 "3","严捷冰","HAN SHITUO","Directed",510,NA,0.5,"酒店研发部"

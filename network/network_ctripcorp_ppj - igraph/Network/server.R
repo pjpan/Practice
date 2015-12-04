@@ -5,47 +5,41 @@ library(dplyr)
 # Define server logic required to summarize and view the selected dataset
 load('./conf/utils.RData')
 
+groupnum <- length(unique(Nodes$Modularity.Class))   # 看一下社团类别
+groupcolor <- as.data.frame(cbind(color=rainbow(groupnum),group = as.integer(unique(Nodes$Modularity.Class))),stringsAsFactors = F) # 生成不同社团的随机颜色；    
 
 shinyServer(function(input, output) {
   
-  # Return the requested dataset
-  dataInput <- reactive({
-    
-    if(input$name == "all"){
-      data <- network
-      data <- filter(head(data[order(data[,"weight"],decreasing = T),], n = input$obs)
-                     ,weight>=5)
-      
-    }else{
-      data <- subset(network 
-                     , network$sourceName == input$name|network$sourceName == input$name  # 单项节点，非双向的；                  
-                     )
-            
-      data <- filter(head(data[order(data[,"weight"],decreasing = T),], n = input$obs)
-                     ,weight>=5
-                     )
-    }
-        
-  }) 
-
   # Generate a summary of the dataset
   output$Plot <- renderPlot({
     
-    data <- dataInput() 
+    if(input$name == "all"){
+      data <- network
+      data <- data %>% 
+                arrange(desc(weight)) %>% 
+                filter(weight>=5) %>%
+                head(n = input$obs)
+    
+    }else{
+      data <- subset(network, network$sourceName == input$name|network$targetName == input$name)  # 单项节点，非双向的；                  
+      data <- data %>% arrange(desc(weight)) %>%
+                               filter(weight >=5)%>%
+                                 head(n = input$obs)
+      
+    }
         
     # debug
-    # data1 <- data    
-    g <- graph.data.frame(data, directed = F )
+    # data <- network
 
-    E(g)$weight <- data$weight   # 线的粗细当做权重；
+    # 剔除掉那些没有存在的节点信息；
+    Nodes <- Nodes
+    allnodes <- union(data$sourceName,data$targetName)
+    Nodes$isexists <- Nodes$Label %in% allnodes
+    Nodes <- Nodes %>% filter(isexists == TRUE)%>% select(Label:Modularity.Class)%>% mutate(Modularity.Class = as.character(Modularity.Class))
+    Nodes <- mutate(Nodes, color = left_join(Nodes, groupcolor, by = c("Modularity.Class"="group"))$color) # 给每个节点赋颜色属性；
+      
+    g <- graph_from_data_frame(data, directed= F , vertices=Nodes)
     
-    V(g)
-    
-    
-    E(g)$color <- left_join(data,colormap,c("dep"="dep"))$color
-    
-    par(mai=c(0,0,1,0))
-        
     #  改进点：
     #  1、线的宽度表示连接的大小；
     #  2、放大图片；
@@ -54,38 +48,49 @@ shinyServer(function(input, output) {
     #  4、圆圈的大小目前是degree，改成pagerank计算出来的权重；
     #  5、圆圈大小用 pagerank来表示，圆圈的颜色用Modularity Class来表示；
     # 
-
         
     try(plot(g,
-        vertex.size = mapp(degree(g),c(1,20)),        #  节点的大小用度来衡量；
-        vertex.shape='circle',                       #   节点的形状；
-        vertex.label.cex=1.5,                        #   节点字体的大小；
+        main='Ctrip Organizational network Demo',
+        vertex.size = vertex_attr(g,"PageRank")*1000,   #  节点的大小用pagerank来衡量；
+        vertex.shape='circle',                        #   节点的形状；
+        vertex.label=V(g)$Label,
+        vertex.label.dist=0,                      # puts the name labels slightly off the dots
+        vertex.label.cex=1,                        #   节点字体的大小；
         vertex.label.color='black',                  #   节点字体颜色
-        vertex.color = E(g)$color,                  # mapp(degree(g),c(1,20)),  E(g)$color  #  node的颜色；原来的结果:
+        vertex.color = vertex_attr(g,"color"),                  # mapp(degree(g),c(1,20)),  E(g)$color  #  node的颜色；原来的结果:
         vertex.label.font = 2,
         layout=layout.fruchterman.reingold,          # layout.auto 自适应,尽量不重叠
-        edge.color = E(g)$color,                      # 线的颜色
+        edge.color = 'black',                      # 线的颜色
         edge.arrow.size = 0,                          #  调整有方向箭头的大小
-        edge.width = E(g)$weight,                     #  调整线的宽度；
+        edge.width = 1.5,                     #  调整线的宽度；E(g)$weight
         asp = 0
     #    edge.label = E(g)$weight,                    # 线的标签显示什么；
         ), silent =T)
     }
      ,width = 1000 , height = 800
     )
-  #
+
   # Show the first "n" observations
   output$view <- renderTable({
-    data <- dataInput()
-    data <- data[order(data[,6],decreasing = T),]
-    select(head(data, n = input$obs),targetName,dep,weight)
+    if(input$name == "all"){
+      data <- network
+      data <- data %>% 
+        arrange(desc(weight)) %>% 
+        filter(weight>=5) %>%
+        head(n = input$obs) %>%
+        select(sourceName,targetName,weight)
+      
+    }else{
+      data <- subset(network, network$sourceName == input$name|network$targetName == input$name)  # 单项节点，非双向的；                  
+      data <- data %>% arrange(desc(weight)) %>%
+        filter(weight >=5)%>%
+        head(n = input$obs) %>%
+        select(sourceName,targetName,weight)
+      
+    }
     
   })
 })
-
-
-
-
 
 
 
