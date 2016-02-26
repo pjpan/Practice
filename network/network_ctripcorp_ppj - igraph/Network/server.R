@@ -38,8 +38,10 @@ shinyServer(function(input, output) {
     Nodes$isexists <- Nodes$Label %in% allnodes
     Nodes <- Nodes %>% filter(isexists == TRUE)%>% select(Label:Modularity.Class)%>% mutate(Modularity.Class = as.character(Modularity.Class))
     Nodes <- mutate(Nodes, color = left_join(Nodes, groupcolor, by = c("Modularity.Class"="group"))$color) # 给每个节点赋颜色属性；
-      
+    
+    data <- network  
     g <- graph_from_data_frame(data, directed= F , vertices=Nodes)
+    
     
     #  改进点：
     #  1、线的宽度表示连接的大小；
@@ -104,7 +106,6 @@ shinyServer(function(input, output) {
     
   })
 })
-
 
 # runApp(,port=4033)
 
