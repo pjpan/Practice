@@ -29,6 +29,7 @@ else:
     cookie = {"Cookie": "SUB=_2A25777GxDeTxGeVI6VEX9yrIzD-IHXVZE9_5rDV6PUJbstANLUT4kW1LHesLoDUG-faT4erxBGXf6tzcyev_hg..; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WWYC5R50l-Ej.m8S0NjCJQE5JpX5o2p; SUHB=0HTxeCoi2VPPgt; SSOLoginState=1458291169; _T_WM=4ac653687a1a0dccb6696ef0641d0cc3; gsid_CTandWM=4uSYCpOz59lzNzHSFiYUcfcGm7D; M_WEIBOCN_PARAMS=uicode%3D20000174"}
     url = 'http://weibo.cn/u/%d?filter=1&page=1'%user_id
 
+
 html = requests.get(url, cookies = cookie).content
 selector = etree.HTML(html)
 
