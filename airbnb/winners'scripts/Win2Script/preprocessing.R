@@ -1,19 +1,19 @@
 # **************************************
 # load data
 # **************************************
-df_train = read_csv("data/train_users_2.csv",
+df_train = read_csv("./input/train_users_2.csv",
                     col_types = cols(
                       timestamp_first_active = col_character()))
-df_test = read_csv("data/test_users.csv",
+df_test = read_csv("./input/test_users.csv",
                    col_types = cols(
                      timestamp_first_active = col_character()))
 labels = df_train[, c('id', 'country_destination')]
 df_test$country_destination = NA
 
-age_gender_bkts <- fread("data/age_gender_bkts.csv", data.table=F)
-countries <- fread("data/countries.csv", data.table=F)
-sample_submission_NDF <- fread("data/sample_submission_NDF.csv", data.table=F)
-sessions <- fread("data/sessions.csv", data.table=F)
+age_gender_bkts <- fread("./input/age_gender_bkts.csv", data.table=F)
+countries <- fread("./input/countries.csv", data.table=F)
+sample_submission_NDF <- fread("./input/sample_submission_NDF.csv", data.table=F)
+sessions <- fread("./input/sessions.csv", data.table=F)
 
 # combine train and test data
 df_train$dataset <- "train"
@@ -72,16 +72,16 @@ df_all <- df_all %>%
     dfb_tfa_lag_flg = as.numeric(as.factor(ifelse(is.na(dfb_tfa_lag_cut)==T, "NA", dfb_tfa_lag_cut))) - 1
   )
 
-
 # **************************************
 # join countries
 # **************************************
-countries <- dplyr::mutate(countries,
-                           language = str_sub(destination_language, 1, 2))
+countries$language <- str_sub(countries$destination_language, 1, 2)
+
 df_all <- df_all %>%
   dplyr::mutate(country_destination = country_destination) %>%
   dplyr::left_join(., countries[c("language", "country_destination", "distance_km", "destination_km2", "language_levenshtein_distance")],
                    by = c("language", "country_destination"))
+
 countries$language <- NULL
 
 
