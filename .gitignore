@@ -2,3 +2,5 @@
 .Rhistory
 .RData
 sessions.csv
+train.csv
+test.csv

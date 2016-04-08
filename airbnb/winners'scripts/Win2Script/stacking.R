@@ -214,6 +214,7 @@ for(i in 1:Folds){
   X2_test_stack <- bind_rows(X2_test_stack,
                              y2_test_df)
 }
+
 X2_test_stack <- X2_test_stack %>%
   group_by(id) %>%
   summarise_each(funs(mean))

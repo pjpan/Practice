@@ -1,15 +1,15 @@
 # set your working directory
-setwd("kaggle-airbnb-recruiting-new-user-bookings")
+# setwd("kaggle-airbnb-recruiting-new-user-bookings")
 
 # **************************************
 # create directory
 # **************************************
-dir.create(paste0("data")) # Please put the download data into this folder
+dir.create(paste0("input")) # Please put the download data into this folder
 dir.create(paste0("cache"))
 dir.create(paste0("submit"))
 
 # set a working folder
-folder <- "analysis01"
+folder <- "result"
 
 dir.create(paste0("cache/", folder))
 dir.create(paste0("cache/", folder, "/valid"))
