@@ -84,7 +84,6 @@ df_all <- df_all %>%
 
 countries$language <- NULL
 
-
 # **************************************
 # set validation
 # **************************************
@@ -166,22 +165,25 @@ sessions[, seq_rev := rev(sequence(.N)), by = c("user_id")]
 sessions[, action2 := paste(action, action_type, action_detail, device_type, sep="_"),]
 
 first_execution <- 1
+library(data.table)
+
+head(sessions)
 
 if(first_execution == 1){
   sessions_action_se_sum <- sessions[,list(secs_elapsed_sum = sum(secs_elapsed, na.rm=T)),
                                      by=list(user_id, action)]
-  sessions_action_se_sum <- melt.data.table(sessions_action_se_sum)
+  sessions_action_se_sum <- data.table:::melt.data.table(sessions_action_se_sum)
+    
   sessions_action_se_sum$variable <- NULL
   sessions_action_se_sum <- data.frame(sessions_action_se_sum)
   names(sessions_action_se_sum) <- c("id", "feature", "value")
   sessions_action_se_sum$feature <- paste("action_se_sum", sessions_action_se_sum$feature, sep="_")
   n_distinct(sessions_action_se_sum$feature)
   saveRDS(sessions_action_se_sum, "cache/sessions_action_se_sum.RData")
-  
-  
+    
   sessions_action_type_se_sum <- sessions[,list(secs_elapsed_sum = sum(secs_elapsed, na.rm=T)),
                                           by=list(user_id, action_type)]
-  sessions_action_type_se_sum <- melt.data.table(sessions_action_type_se_sum)
+  sessions_action_type_se_sum <- data.table:::melt.data.table(sessions_action_type_se_sum)
   sessions_action_type_se_sum$variable <- NULL
   sessions_action_type_se_sum <- data.frame(sessions_action_type_se_sum)
   names(sessions_action_type_se_sum) <- c("id", "feature", "value")
@@ -192,7 +194,7 @@ if(first_execution == 1){
   
   sessions_action_detail_se_sum <- sessions[,list(secs_elapsed_sum = sum(secs_elapsed, na.rm=T)),
                                             by=list(user_id, action_detail)]
-  sessions_action_detail_se_sum <- melt.data.table(sessions_action_detail_se_sum)
+  sessions_action_detail_se_sum <- data.table:::melt.data.table(sessions_action_detail_se_sum)
   sessions_action_detail_se_sum$variable <- NULL
   sessions_action_detail_se_sum <- data.frame(sessions_action_detail_se_sum)
   names(sessions_action_detail_se_sum) <- c("id", "feature", "value")
@@ -203,7 +205,7 @@ if(first_execution == 1){
   
   sessions_device_type_se_sum <- sessions[,list(secs_elapsed_sum = sum(secs_elapsed, na.rm=T)),
                                           by=list(user_id, device_type)]
-  sessions_device_type_se_sum <- melt.data.table(sessions_device_type_se_sum)
+  sessions_device_type_se_sum <- data.table:::melt.data.table(sessions_device_type_se_sum)
   sessions_device_type_se_sum$variable <- NULL
   sessions_device_type_se_sum <- data.frame(sessions_device_type_se_sum)
   names(sessions_device_type_se_sum) <- c("id", "feature", "value")
@@ -214,7 +216,7 @@ if(first_execution == 1){
   
   sessions_action_flg_sum <- sessions[,list(flg_sum = sum(flg, na.rm=T)),
                                       by=list(user_id, action)]
-  sessions_action_flg_sum <- melt.data.table(sessions_action_flg_sum)
+  sessions_action_flg_sum <- data.table:::melt.data.table(sessions_action_flg_sum)
   sessions_action_flg_sum$variable <- NULL
   sessions_action_flg_sum <- data.frame(sessions_action_flg_sum)
   names(sessions_action_flg_sum) <- c("id", "feature", "value")
@@ -225,7 +227,7 @@ if(first_execution == 1){
   
   sessions_action_type_flg_sum <- sessions[,list(flg_sum = sum(flg, na.rm=T)),
                                            by=list(user_id, action_type)]
-  sessions_action_type_flg_sum <- melt.data.table(sessions_action_type_flg_sum)
+  sessions_action_type_flg_sum <- data.table:::melt.data.table(sessions_action_type_flg_sum)
   sessions_action_type_flg_sum$variable <- NULL
   sessions_action_type_flg_sum <- data.frame(sessions_action_type_flg_sum)
   names(sessions_action_type_flg_sum) <- c("id", "feature", "value")
@@ -236,7 +238,7 @@ if(first_execution == 1){
   
   sessions_action_detail_flg_sum <- sessions[,list(flg_sum = sum(flg, na.rm=T)),
                                              by=list(user_id, action_detail)]
-  sessions_action_detail_flg_sum <- melt.data.table(sessions_action_detail_flg_sum)
+  sessions_action_detail_flg_sum <- data.table:::melt.data.table(sessions_action_detail_flg_sum)
   sessions_action_detail_flg_sum$variable <- NULL
   sessions_action_detail_flg_sum <- data.frame(sessions_action_detail_flg_sum)
   names(sessions_action_detail_flg_sum) <- c("id", "feature", "value")
@@ -247,7 +249,7 @@ if(first_execution == 1){
   
   sessions_device_type_flg_sum <- sessions[,list(flg_sum = sum(flg, na.rm=T)),
                                            by=list(user_id, device_type)]
-  sessions_device_type_flg_sum <- melt.data.table(sessions_device_type_flg_sum)
+  sessions_device_type_flg_sum <- data.table:::melt.data.table(sessions_device_type_flg_sum)
   sessions_device_type_flg_sum$variable <- NULL
   sessions_device_type_flg_sum <- data.frame(sessions_device_type_flg_sum)
   names(sessions_device_type_flg_sum) <- c("id", "feature", "value")
@@ -258,7 +260,7 @@ if(first_execution == 1){
   
   sessions_action_se_mean <- sessions[,list(secs_elapsed_mean = mean(secs_elapsed, na.rm=T)),
                                       by=list(user_id, action)]
-  sessions_action_se_mean <- melt.data.table(sessions_action_se_mean)
+  sessions_action_se_mean <- data.table:::melt.data.table(sessions_action_se_mean)
   sessions_action_se_mean$variable <- NULL
   sessions_action_se_mean <- data.frame(sessions_action_se_mean)
   names(sessions_action_se_mean) <- c("id", "feature", "value")
@@ -269,7 +271,7 @@ if(first_execution == 1){
   
   sessions_action_type_se_mean <- sessions[,list(secs_elapsed_mean = mean(secs_elapsed, na.rm=T)),
                                            by=list(user_id, action_type)]
-  sessions_action_type_se_mean <- melt.data.table(sessions_action_type_se_mean)
+  sessions_action_type_se_mean <-  data.table:::melt.data.table(sessions_action_type_se_mean)
   sessions_action_type_se_mean$variable <- NULL
   sessions_action_type_se_mean <- data.frame(sessions_action_type_se_mean)
   names(sessions_action_type_se_mean) <- c("id", "feature", "value")
@@ -280,7 +282,7 @@ if(first_execution == 1){
   
   sessions_action_detail_se_mean <- sessions[,list(secs_elapsed_mean = mean(secs_elapsed, na.rm=T)),
                                              by=list(user_id, action_detail)]
-  sessions_action_detail_se_mean <- melt.data.table(sessions_action_detail_se_mean)
+  sessions_action_detail_se_mean <-  data.table:::melt.data.table(sessions_action_detail_se_mean)
   sessions_action_detail_se_mean$variable <- NULL
   sessions_action_detail_se_mean <- data.frame(sessions_action_detail_se_mean)
   names(sessions_action_detail_se_mean) <- c("id", "feature", "value")
@@ -291,7 +293,7 @@ if(first_execution == 1){
   
   sessions_device_type_se_mean <- sessions[,list(secs_elapsed_mean = mean(secs_elapsed, na.rm=T)),
                                            by=list(user_id, device_type)]
-  sessions_device_type_se_mean <- melt.data.table(sessions_device_type_se_mean)
+  sessions_device_type_se_mean <- data.table:::melt.data.table(sessions_device_type_se_mean)
   sessions_device_type_se_mean$variable <- NULL
   sessions_device_type_se_mean <- data.frame(sessions_device_type_se_mean)
   names(sessions_device_type_se_mean) <- c("id", "feature", "value")
@@ -302,7 +304,7 @@ if(first_execution == 1){
   
   sessions_action_se_sd <- sessions[,list(secs_elapsed_sd = sd(secs_elapsed, na.rm=T)),
                                     by=list(user_id, action)]
-  sessions_action_se_sd <- melt.data.table(sessions_action_se_sd)
+  sessions_action_se_sd <- data.table:::melt.data.table(sessions_action_se_sd)
   sessions_action_se_sd$variable <- NULL
   sessions_action_se_sd <- data.frame(sessions_action_se_sd)
   names(sessions_action_se_sd) <- c("id", "feature", "value")
@@ -313,7 +315,7 @@ if(first_execution == 1){
   
   sessions_action_type_se_sd <- sessions[,list(secs_elapsed_sd = sd(secs_elapsed, na.rm=T)),
                                          by=list(user_id, action_type)]
-  sessions_action_type_se_sd <- melt.data.table(sessions_action_type_se_sd)
+  sessions_action_type_se_sd <- data.table:::melt.data.table(sessions_action_type_se_sd)
   sessions_action_type_se_sd$variable <- NULL
   sessions_action_type_se_sd <- data.frame(sessions_action_type_se_sd)
   names(sessions_action_type_se_sd) <- c("id", "feature", "value")
@@ -324,7 +326,7 @@ if(first_execution == 1){
   
   sessions_action_detail_se_sd <- sessions[,list(secs_elapsed_sd = sd(secs_elapsed, na.rm=T)),
                                            by=list(user_id, action_detail)]
-  sessions_action_detail_se_sd <- melt.data.table(sessions_action_detail_se_sd)
+  sessions_action_detail_se_sd <- data.table:::melt.data.table(sessions_action_detail_se_sd)
   sessions_action_detail_se_sd$variable <- NULL
   sessions_action_detail_se_sd <- data.frame(sessions_action_detail_se_sd)
   names(sessions_action_detail_se_sd) <- c("id", "feature", "value")
@@ -335,7 +337,7 @@ if(first_execution == 1){
   
   sessions_device_type_se_sd <- sessions[,list(secs_elapsed_sd = sd(secs_elapsed, na.rm=T)),
                                          by=list(user_id, device_type)]
-  sessions_device_type_se_sd <- melt.data.table(sessions_device_type_se_sd)
+  sessions_device_type_se_sd <- data.table:::melt.data.table(sessions_device_type_se_sd)
   sessions_device_type_se_sd$variable <- NULL
   sessions_device_type_se_sd <- data.frame(sessions_device_type_se_sd)
   names(sessions_device_type_se_sd) <- c("id", "feature", "value")
@@ -346,7 +348,7 @@ if(first_execution == 1){
   
   sessions_action_se_wrmean <- sessions[,list(secs_elapsed_wrmean = weighted.mean(secs_elapsed, w = 1/seq_rev)),
                                         by=list(user_id, action)]
-  sessions_action_se_wrmean <- melt.data.table(sessions_action_se_wrmean)
+  sessions_action_se_wrmean <- data.table:::melt.data.table(sessions_action_se_wrmean)
   sessions_action_se_wrmean$variable <- NULL
   sessions_action_se_wrmean <- data.frame(sessions_action_se_wrmean)
   names(sessions_action_se_wrmean) <- c("id", "feature", "value")
@@ -357,7 +359,7 @@ if(first_execution == 1){
   
   sessions_action_type_se_wrmean <- sessions[,list(secs_elapsed_wrmean = weighted.mean(secs_elapsed, w = 1/seq_rev)),
                                              by=list(user_id, action_type)]
-  sessions_action_type_se_wrmean <- melt.data.table(sessions_action_type_se_wrmean)
+  sessions_action_type_se_wrmean <- data.table:::melt.data.table(sessions_action_type_se_wrmean)
   sessions_action_type_se_wrmean$variable <- NULL
   sessions_action_type_se_wrmean <- data.frame(sessions_action_type_se_wrmean)
   names(sessions_action_type_se_wrmean) <- c("id", "feature", "value")
@@ -368,7 +370,7 @@ if(first_execution == 1){
   
   sessions_action_detail_se_wrmean <- sessions[,list(secs_elapsed_wrmean = weighted.mean(secs_elapsed, w = 1/seq_rev)),
                                                by=list(user_id, action_detail)]
-  sessions_action_detail_se_wrmean <- melt.data.table(sessions_action_detail_se_wrmean)
+  sessions_action_detail_se_wrmean <- data.table:::melt.data.table(sessions_action_detail_se_wrmean)
   sessions_action_detail_se_wrmean$variable <- NULL
   sessions_action_detail_se_wrmean <- data.frame(sessions_action_detail_se_wrmean)
   names(sessions_action_detail_se_wrmean) <- c("id", "feature", "value")
@@ -379,7 +381,7 @@ if(first_execution == 1){
   
   sessions_device_type_se_wrmean <- sessions[,list(secs_elapsed_wrmean = weighted.mean(secs_elapsed, w = 1/seq_rev)),
                                              by=list(user_id, device_type)]
-  sessions_device_type_se_wrmean <- melt.data.table(sessions_device_type_se_wrmean)
+  sessions_device_type_se_wrmean <- data.table:::melt.data.table(sessions_device_type_se_wrmean)
   sessions_device_type_se_wrmean$variable <- NULL
   sessions_device_type_se_wrmean <- data.frame(sessions_device_type_se_wrmean)
   names(sessions_device_type_se_wrmean) <- c("id", "feature", "value")
@@ -390,7 +392,7 @@ if(first_execution == 1){
   
   sessions_action_se_wmean <- sessions[,list(secs_elapsed_wmean = weighted.mean(secs_elapsed, w = 1/seq)),
                                        by=list(user_id, action)]
-  sessions_action_se_wmean <- melt.data.table(sessions_action_se_wmean)
+  sessions_action_se_wmean <- data.table:::melt.data.table(sessions_action_se_wmean)
   sessions_action_se_wmean$variable <- NULL
   sessions_action_se_wmean <- data.frame(sessions_action_se_wmean)
   names(sessions_action_se_wmean) <- c("id", "feature", "value")
@@ -401,7 +403,7 @@ if(first_execution == 1){
   
   sessions_action_type_se_wmean <- sessions[,list(secs_elapsed_wmean = weighted.mean(secs_elapsed, w = 1/seq)),
                                             by=list(user_id, action_type)]
-  sessions_action_type_se_wmean <- melt.data.table(sessions_action_type_se_wmean)
+  sessions_action_type_se_wmean <- data.table:::melt.data.table(sessions_action_type_se_wmean)
   sessions_action_type_se_wmean$variable <- NULL
   sessions_action_type_se_wmean <- data.frame(sessions_action_type_se_wmean)
   names(sessions_action_type_se_wmean) <- c("id", "feature", "value")
@@ -412,7 +414,7 @@ if(first_execution == 1){
   
   sessions_action_detail_se_wmean <- sessions[,list(secs_elapsed_wmean = weighted.mean(secs_elapsed, w = 1/seq)),
                                               by=list(user_id, action_detail)]
-  sessions_action_detail_se_wmean <- melt.data.table(sessions_action_detail_se_wmean)
+  sessions_action_detail_se_wmean <- data.table:::melt.data.table(sessions_action_detail_se_wmean)
   sessions_action_detail_se_wmean$variable <- NULL
   sessions_action_detail_se_wmean <- data.frame(sessions_action_detail_se_wmean)
   names(sessions_action_detail_se_wmean) <- c("id", "feature", "value")
@@ -423,7 +425,7 @@ if(first_execution == 1){
   
   sessions_device_type_se_wmean <- sessions[,list(secs_elapsed_wmean = weighted.mean(secs_elapsed, w = 1/seq)),
                                             by=list(user_id, device_type)]
-  sessions_device_type_se_wmean <- melt.data.table(sessions_device_type_se_wmean)
+  sessions_device_type_se_wmean <- data.table:::melt.data.table(sessions_device_type_se_wmean)
   sessions_device_type_se_wmean$variable <- NULL
   sessions_device_type_se_wmean <- data.frame(sessions_device_type_se_wmean)
   names(sessions_device_type_se_wmean) <- c("id", "feature", "value")
@@ -461,17 +463,19 @@ sessions_device_type_se_wmean <- readRDS("cache/sessions_device_type_se_wmean.RD
 # **************************************
 # countries features
 # **************************************
-countries <- dplyr::mutate(countries,
-                           country_language = paste0(country_destination, "_", destination_language))
+countries$country_language <- paste0(countries$country_destination, "_", countries$destination_language)
+
 countries_reshape <- data.frame()
 for(i in unique(countries$country_language)){
   # i <- "AU_eng"
   countries_ <- subset(countries, country_language == i)
   countries_$country_language <- NULL
-  countries_ <- reshape(countries_,
-                        direction='wide',
-                        idvar='destination_language',
-                        timevar='country_destination')
+  countries_ <- (countries_,
+                        direction="wide",
+                        idvar="destination_language",
+                        timevar="country_destination"
+                        )
+  
   countries_reshape <- bind_rows(
     countries_reshape,
     countries_
@@ -494,7 +498,6 @@ df_all_countries_feats <- data.frame(df_all_countries_feats)
 names(df_all_countries_feats) <- c("id", "feature", "value")
 print("countries feature")
 print(n_distinct(df_all_countries_feats$feature))
-
 
 # **************************************
 # age_gender_bkts features
