@@ -4,3 +4,4 @@
 sessions.csv
 train.csv
 test.csv
+*.csv

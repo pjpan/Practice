@@ -55,16 +55,17 @@ clf.fit <- h2o.ensemble(x = x, y = y,
 # summary(clf.fit)
 pp <- predict(clf.fit, as.h2o(df_test[, !names(df_test)%in%c("TARGET")]))
 predictions <- as.data.frame(pp$pred)[,3]  #third column, p1 is P(Y==1)
-# qplot(predictions)
+summary(predictions)
 
 submission_h2o_v2 <- data.frame(ID=df_test$ID, TARGET=predictions)
 # head(submission_h2o_v1)
 write.csv(submission_h2o_v2, "result/submission_h2o_v2.csv", row.names = F)
 
-# ggplot()+geom_histogram(data = first, aes(x=TARGET))+geom_histogram(aes(x=predictions), color = "red")
+ggplot()+geom_histogram(data = first, aes(x=TARGET))+geom_histogram(aes(x=predictions), color = "red")
 
 # Ensemble test AUC 
 # cvAUC::AUC(predictions = predictions, labels = labels)
+summary(first$TARGET)
 
 # Base learner test AUC (for comparison)
 # L <- length(learner)
