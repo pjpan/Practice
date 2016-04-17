@@ -69,11 +69,11 @@ if __name__ == '__main__':
 
     print "Blending."
     clf = LogisticRegression()
-    clf.fit(dataset_blend_train, y)
+    clf.fit(dataset_blend_train, np.array(y).ravel())
     y_submission = clf.predict_proba(dataset_blend_test)[:,1]
 
     print "Linear stretch of predictions to [0,1]"
     y_submission = (y_submission - y_submission.min()) / (y_submission.max() - y_submission.min())
 
     print "Saving Results."
-    np.savetxt(fname='test.csv', X=y_submission, fmt='%0.9f')
+    np.savetxt(fname='/Users/ppj/Documents/Practice/SantanderCustomerSatisfaction/submission_stack_v1.csv', X=y_submission, fmt='%0.9f')

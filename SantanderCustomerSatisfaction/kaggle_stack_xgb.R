@@ -128,3 +128,6 @@ ggplot()+geom_histogram(data = first, aes(x=TARGET))+geom_histogram(aes(x=pred_s
 submissionv_stackv1 <- data.frame(ID=xgb_test_stack$id, TARGET=xgb_test_stack$y_xgb_test_)
 cat("saving the submission file\n")
 write.csv(submissionv_stackv1, "result/submissionv_stackv1.csv", row.names = F)
+
+stack1 <- read.csv(file = 'result/submission_stack_v1.csv')
+summary(stack1)
