@@ -24,11 +24,11 @@ for(i in 1:Folds){
                   booster             = "gbtree",
                   eval_metric         = "auc",
                   eta                 = 0.02,
-                  max_depth           = 6,
-                  subsample           = 0.6,
-                  colsample_bytree    = 0.3, # 0.837938 
+                  max_depth           = 5,
+                  subsample           = 0.7,
+                  colsample_bytree    = 0.7, # auc0.842956 
                   min_child_weight    = 1,
-                  nthread             = 8)
+                  nthread             = 24)
   if (i == 1){
     # Run Cross Valication
     cv.nround = 3000
@@ -41,6 +41,7 @@ for(i in 1:Folds){
                     early.stop.round = 20,
                     maximize = T)
     saveRDS(bst.cv, paste0("cache/train/xgb_bst_cv.RData"))
+    print(paste0("best test-auc" , max(bst.cv$test.auc.mean),"\n"))
   }
 
   # train the finnal model
@@ -55,36 +56,42 @@ for(i in 1:Folds){
 
   # predict test result
   y_xgb_fold_ <- predict(xgb.stack, dX_xgb_fold_)
-  y_xgb_fold_ <- as.data.frame(y_xgb_fold_)
-  y_xgb_fold_$id <- xgb_fold_id_
-  xgb_stack <- rbind(xgb_stack,
-                        y_xgb_fold_)
+  y_xgb_fold_pred <- as.data.frame(cbind(pred = y_xgb_fold_ , id = xgb_fold_id_))
+  xgb_stack <- rbind(xgb_stack, y_xgb_fold_pred)
   
   y_xgb_test_ <- predict(xgb.stack, dtest_)
   y_xgb_test_df_ <- as.data.frame(y_xgb_test_)
   y_xgb_test_df_$id <- df_test$ID
   xgb_test_stack <- rbind(y_xgb_test_df_,
                               xgb_test_stack)
-  
   print(paste0(i, "folds finished\n"))
 }
 
-names(xgb_stack)
 xgb_test_stack <- xgb_test_stack %>%
   group_by(id) %>%
   summarise_each(funs(mean))
 
-xgb_stack <- melt.data.table(as.data.table(xgb_stack))
-xgb_stack <- data.frame(xgb_stack)
-names(xgb_stack) <- c("id", "feature", "value")
 
-xgb_test_stack <- melt.data.table(as.data.table(xgb_test_stack))
-xgb_test_stack <- data.frame(xgb_test_stack)
-names(xgb_test_stack) <- c("id", "feature", "value")
+pred_stack <- xgb_test_stack%>%mutate(pred = (y_xgb_test_-min(y_xgb_test_))/(max(y_xgb_test_)-min(y_xgb_test_)))
+summary(pred_stack$pred)
+summary(pred_stack$y_xgb_test_)
+
+# xgb_stack <- melt.data.table(as.data.table(xgb_stack))
+# xgb_stack <- data.frame(xgb_stack)
+# names(xgb_stack) <- c("id", "feature", "value")
+
+tmp_train <- dplyr::inner_join(x= df_train_y, xgb_stack, by =c("ID" = "ID"))
+glm_fit <- glmnet::glmnet(x= tmp_train$pred, y = tmp_train$TARGET, family = "binomial")
+
+# xgb_test_stack <- melt.data.table(as.data.table(xgb_test_stack))
+# xgb_test_stack <- data.frame(xgb_test_stack)
+# names(xgb_test_stack) <- c("id", "feature", "value")
 
 saveRDS(xgb_stack, paste0("cache/train/xgb_stack.RData"))
 saveRDS(xgb_test_stack, paste0("cache/train/xgb_test_stack.RData"))
 gc()
+
+summary(xgb_test_stack$y_xgb_test_)
 
 # 查看变量重要性；
 feature.names <-  dtrain@Dimnames[[2]]
@@ -116,8 +123,11 @@ title("Precision&Recall curve in submissionv8")
 ggplot()+geom_line(data = perf.result, aes(x= perf.result@x.values, y = perf.result@y.values))
 
 first <- read.csv(file = 'result/submission.csv')
-ggplot()+geom_histogram(data = first, aes(x=TARGET))+geom_histogram(aes(x=preds_test), color = "red")
+ggplot()+geom_histogram(data = first, aes(x=TARGET))+geom_histogram(aes(x=pred_stack$pred), color = "red")
 # submission result
-submissionv8 <- data.frame(ID=df_test_raw$ID, TARGET=preds_test)
+submissionv_stackv1 <- data.frame(ID=xgb_test_stack$id, TARGET=xgb_test_stack$y_xgb_test_)
 cat("saving the submission file\n")
-write.csv(submissionv8, "submissionv8.csv", row.names = F)
+write.csv(submissionv_stackv1, "result/submissionv_stackv1.csv", row.names = F)
+
+stack1 <- read.csv(file = 'result/submission_stack_v1.csv')
+summary(stack1)

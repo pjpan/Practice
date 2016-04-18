@@ -21,8 +21,8 @@ import os
 os.chdir('/Users/ppj/Documents/Practice/SantanderCustomerSatisfaction')
 
 # load data
-df_train = pd.read_csv('./input/train.csv')
-df_test = pd.read_csv('./input/test.csv')
+df_train= pd.read_csv('/Users/ppj/Documents/Practice/SantanderCustomerSatisfaction/cache/df_train.csv')
+df_test = pd.read_csv('/Users/ppj/Documents/Practice/SantanderCustomerSatisfaction/cache/df_test.csv')
 
 # remove constant columns
 remove = []
@@ -56,7 +56,7 @@ len_train = len(X_train)
 len_test  = len(X_test)
 
 # classifier
-clf = xgb.XGBClassifier(missing=np.nan, max_depth=5, n_estimators=350, learning_rate=0.03, nthread=4, subsample=0.95, colsample_bytree=0.85, seed=4242)
+clf = xgb.XGBClassifier(missing=np.nan, max_depth=5, n_estimators=500, learning_rate=0.02, nthread=4, subsample=0.7, colsample_bytree=0.75, seed=4242)
 
 X_fit, X_eval, y_fit, y_eval= train_test_split(X_train, y_train, test_size=0.3)
 

@@ -83,10 +83,9 @@ for(s in 1:(length(df_train_category)-1)){
 # df_train_x%>%count(num_var44_0, TARGET)%>%mutate(pct = n/sum(n))
 # impactModel(df_train_x$num_var44_0, df_train_x$TARGET)
 
-
 # 进行数据合并，把稀疏数值和类别结果进行合并;
-df_train <- dplyr::bind_cols(df_train_x[,colnames(df_train_x)%in%tosparsefeature], df_train_category[,!colnames(df_train_category)%in%c("TARGET")])
-df_test <- dplyr::bind_cols(df_test[,colnames(df_test)%in%tosparsefeature], df_test_category[,!colnames(df_test_category)%in%c("TARGET")])
+df_train <- dplyr::bind_cols(df_train_x[,colnames(df_train_x)%in%tosparsefeature], df_train_category[,!colnames(df_train_category)%in%c("TARGET", tocategory)])
+df_test <- dplyr::bind_cols(df_test[,colnames(df_test)%in%tosparsefeature], df_test_category[,!colnames(df_test_category)%in%c("TARGET", tocategory)])
 
 # 先区分出训练集，训练集合区分train+cv和测试集合
 # train <- caret::createDataPartition(df_train$TARGET, p = 0.5, list =F)
@@ -121,4 +120,8 @@ dtest_x <- sparse.model.matrix(TARGET ~ ., data = df_test)
 # # dtrain_cv_ <- xgb.DMatrix(data = dtrain_cv_x, label = dtrain_cv$TARGET)
 dtest_ <- xgb.DMatrix(data = dtest_x, label = df_test$TARGET)
 
+df_train%>%count(var3, TARGET)%>%mutate(pct =n/sum(n))%>%ggplot()+geom_point(aes(x=var3, y =pct))
+
+write.csv( df_train , "cache/df_train.csv", row.names = F)
+write.csv( df_test , "cache/df_test.csv", row.names = F)
 
