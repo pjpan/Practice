@@ -69,6 +69,22 @@ for(i in 1:(ncol(df_train_x)))
   }
 }
 
+# 替换极端大的数值为 -1 
+
+summary(df_train_x$saldo_medio_var33_ult1)
+
+df_train_x[df_train_x==9999999999] <- -1
+
+for(i in 2:ncol(df_train_x)){
+  data_image <- paste0("distribute/",names(df_train_x)[i],i,".jpg")
+  jpeg(file = data_image, bg ="transparent", width=1024, height=768, units="px", quality=75, pointsize=20)
+  p <- ggplot(df_train_x,aes(df_train_x[,i]))+xlab(names(df_train_x)[i])
+  p
+  plot(p)
+  dev.off()
+  cat(names(df_train_x)[i], "is done. \n")
+}
+
 # 进行impactcoding
 df_train_category <- df_train_x[, names(df_train_x) %in% c(tocategory,"TARGET")]
 df_test_category <- df_test[, names(df_test) %in% c(tocategory,"TARGET")]

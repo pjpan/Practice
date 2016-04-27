@@ -13,6 +13,7 @@ from sklearn.cross_validation import StratifiedKFold
 from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier, GradientBoostingClassifier
 from sklearn.linear_model import LogisticRegression
 import pandas as pd
+import os
 
 def logloss(attempt, actual, epsilon=1.0e-15):
     """Logloss, i.e. the score of the bioresponse competition.
@@ -24,13 +25,14 @@ def logloss(attempt, actual, epsilon=1.0e-15):
 if __name__ == '__main__':
 
     np.random.seed(0) # seed to shuffle the train set
-
+    os.chdir('D:/gitcode/Practice/SantanderCustomerSatisfaction')
+    
     n_folds = 10
     verbose = True
     shuffle = False
-    X = pd.read_csv('/Users/ppj/Documents/Practice/SantanderCustomerSatisfaction/cache/df_train.csv')
+    X = pd.read_csv('cache/df_train.csv')
     y = X[["TARGET"]]
-    X_submission = pd.read_csv('/Users/ppj/Documents/Practice/SantanderCustomerSatisfaction/cache/df_test.csv')
+    X_submission = pd.read_csv('cache/df_test.csv')
 
     # X, y, X_submission = load_data.load()
 
