@@ -31,7 +31,7 @@ for(i in 1:Folds){
                   nthread             = 24)
   if (i == 1){
     # Run Cross Valication
-    cv.nround = 3000
+    cv.nround = 1200
     bst.cv = xgb.cv(param = param,
                     data = dX_xgb_, 
                     label = xgb_y_,
@@ -131,3 +131,5 @@ write.csv(submissionv_stackv1, "result/submissionv_stackv1.csv", row.names = F)
 
 stack1 <- read.csv(file = 'result/submission_stack_v1.csv')
 summary(stack1)
+summary(first$TARGET)
+
