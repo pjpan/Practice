@@ -1,5 +1,5 @@
 library(randomForest)
-df.train_ <- df.train
+df.train_ <- df_train_x
 df.train_$TARGET <- as.factor(df.train_$TARGET)
 single.rf <- randomForest(TARGET~ .,
                           data =df.train_,
@@ -9,8 +9,5 @@ single.rf <- randomForest(TARGET~ .,
                           ntree = 500,
                           na.action = na.omit)
 
-sapply(X = df.train, FUN = summary)
 
-quantile(df.train_$imp_op_var40_ult1, seq(from= 0 ,to = 1,by=0.01))
-
-df.train_%>%count(imp_op_var40_ult1>700, TARGET)%>%mutate(pct = n/sum(n))
+save(single_rf, 'cache/single.rf.model.RData')

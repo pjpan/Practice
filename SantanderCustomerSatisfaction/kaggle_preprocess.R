@@ -52,15 +52,10 @@ feature.names <- setdiff(names(df_train_x), toRemove)
 df_train_x <- df_train_x[, feature.names]
 df_test <- df_test[, feature.names]
 
-<<<<<<< Updated upstream
 # 替换极端大的数值为 -1 
 df_train_x[df_train_x== 9999999999] <- -1
 df_train_x[df_train_x<= -1000000] <- -1
 df_train_x[df_train_x<= -999999] <- -1
-
-df_test[df_train_x== 9999999999] <- -1
-df_test[df_train_x<= -1000000] <- -1
-df_test[df_train_x<= -999999] <- -1
 
 # 删除掉那些极端分布的结果；
 sparsefeature <- c()
@@ -85,7 +80,7 @@ for(i in 2:ncol(df_train_x)){
   dev.off()
   cat(names(df_train_x)[i], "is done. \n")
 }
-=======
+
 # names(df_test)
 # # 查看变量是否超过10个类别，如果在train和test有共同数值，则为类别，否则为稀疏数值；
 # tocategory <- c()
@@ -113,7 +108,6 @@ for(i in 2:ncol(df_train_x)){
 #   eval(parse(text = paste0("df_test_category$impact_",colnames(df_test_category)[s]," <- applyImpactModel(impact_",colnames(df_test_category)[s],"_mod, df_test_category$",colnames(df_test_category)[s],")")))
 #   cat(paste0(colnames(df_train_category)[s],"is finished\n"))
 # }
->>>>>>> Stashed changes
 
 # num_meses_var5_ult3和target正相关；
 # df_train_x%>%select(num_var35, TARGET)%>%count(num_var35,TARGET)%>%mutate(pct =n/sum(n))
@@ -176,13 +170,10 @@ df_test <- df_test[, !colnames(df_test)%in%c(totransform)]
 # df_train_x%>%count(num_var44_0, TARGET)%>%mutate(pct = n/sum(n))
 # impactModel(df_train_x$num_var44_0, df_train_x$TARGET)
 
-<<<<<<< Updated upstream
-=======
 # 进行数据合并，把稀疏数值和类别结果进行合并;
 # df_train <- dplyr::bind_cols(df_train_x[,colnames(df_train_x)%in%tosparsefeature], df_train_category[,!colnames(df_train_category)%in%c("TARGET", tocategory)])
 # df_test <- dplyr::bind_cols(df_test[,colnames(df_test)%in%tosparsefeature], df_test_category[,!colnames(df_test_category)%in%c("TARGET", tocategory)])
 
->>>>>>> Stashed changes
 # 先区分出训练集，训练集合区分train+cv和测试集合
 train <- caret::createDataPartition(df_train_x$TARGET, p = 0.8, list =F)
 dtrain <- df_train_x[train, ]
@@ -215,11 +206,7 @@ dtest_x <- sparse.model.matrix(TARGET ~ ., data = df_test)
 # # dtrain_cv_ <- xgb.DMatrix(data = dtrain_cv_x, label = dtrain_cv$TARGET)
 dtest_ <- xgb.DMatrix(data = dtest_x, label = df_test$TARGET)
 
-<<<<<<< Updated upstream
-
-=======
 # df_train%>%count(var3, TARGET)%>%mutate(pct =n/sum(n))%>%ggplot()+geom_point(aes(x=var3, y =pct))
 # write.csv( df_train_x , "cache/df_train.csv", row.names = F)
 # write.csv( df_test , "cache/df_test.csv", row.names = F)
->>>>>>> Stashed changes
 
