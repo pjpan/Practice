@@ -5,3 +5,4 @@ sessions.csv
 train.csv
 test.csv
 *.csv
+train_sm
