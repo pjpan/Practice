@@ -20,7 +20,7 @@ library(FNN)
 library(jpeg)
 library(imager)
 
-path="../input/train_sm/"
+path="./train_sm/"
 
 
 scl=.3
