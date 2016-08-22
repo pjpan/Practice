@@ -1,8 +1,10 @@
 .Rproj.user
 .Rhistory
-.RData
+*.RData
 sessions.csv
 train.csv
 test.csv
 *.csv
 train_sm
+*.log
+splits_level1.pkl
