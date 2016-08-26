@@ -8,3 +8,5 @@ test.csv
 train_sm
 *.log
 splits_level1.pkl
+splits_level2.pkl
+splits_level3.pkl
