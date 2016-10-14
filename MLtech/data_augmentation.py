@@ -16,9 +16,9 @@ def extend_series(X, rng, target_len=19):
     extra_needed = target_len-curr_len
     if (extra_needed > 0):
         reps = [1]*(curr_len)
-        add_ind = rng.randint(0, curr_len, size=extra_needed)
+        add_ind = rng.randint(0, curr_len, size=extra_needed)  # 生成原长度的随机个数
         
-        new_reps = [np.sum(add_ind==j) for j in range(curr_len)]
-        new_reps = np.array(reps) + np.array(new_reps)
-        X = np.repeat(X, new_reps, axis=0)
+        new_reps = [np.sum(add_ind==j) for j in range(curr_len)]  #计算每个数字出现的次数
+        new_reps = np.array(reps) + np.array(new_reps)        # 和原序列进行累加，他们之和=target_len
+        X = np.repeat(X, new_reps, axis=0)                    # 对某些行重复多次，X.shape[0] = target_len
     return(X)
