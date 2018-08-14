@@ -10,3 +10,5 @@ train_sm
 splits_level1.pkl
 splits_level2.pkl
 splits_level3.pkl
+*.Dstore
+*.icloud
